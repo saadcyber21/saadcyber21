@@ -58,9 +58,31 @@ Sits between an agent and the systems it can reach. Validates agent identity
 against role policy and inspects payloads for destructive operations —
 `DROP TABLE`, command chaining, reverse shells — before they execute.
 
-**[secret-sweep](https://github.com/saadcyber21/secret-sweep)** — credential and
-secret detection across repositories
+**[secret-sweep](https://github.com/saadcyber21/secret-sweep)** —
+credential detection with a *measured* error rate
 ![CI](https://github.com/saadcyber21/secret-sweep/actions/workflows/validate.yml/badge.svg)
+
+One stdlib-only file, no install step. Fifteen pattern rules for prefixed
+credentials, plus an entropy detector for the unprefixed random strings that
+rules cannot describe.
+
+Entropy detection is a heuristic, so I measured it rather than describing it.
+Against the CPython stdlib — 669 files, 304,467 lines — it reports **23 false
+positives (0.0076% of lines)** at **99.5% recall** on generated credentials.
+`scripts/calibrate.py` reproduces both numbers; CI fails the build if recall
+drops below its floor.
+
+Worth reading for the bug it started from: the original detector was
+`entropy > 4.5`, which **cannot fire on any token shorter than 24 characters**,
+because entropy is bounded by `log2(min(len, alphabet))`. A 20-character AWS
+access key ID was undetectable by construction — including the one in the
+repo's own sample file, which the README pointed at as the demonstration. It
+flagged 610 lines on the same corpus. Fixing it meant separating randomness
+from *compressed English*: `MAX_RETRY_ATTEMPTS_CONFIG` has a flat character
+distribution and passes any pure entropy test, so detection now combines
+entropy ratio, alphabet coverage, and case-transition rate with structural
+guards for sequential constants, identifier syntax, and reference forms like
+`actions/checkout@v4`.
 
 **[Phish-Guard](https://github.com/saadcyber21/Phish-Guard)** — phishing detection
 ![CI](https://github.com/saadcyber21/Phish-Guard/actions/workflows/validate.yml/badge.svg)
@@ -87,6 +109,14 @@ I would rather state these than have you find them.
   ASI09 and ASI10 have no attacks yet. Its report lists those as blind spots on
   every run rather than implying full coverage, and it has no framework
   adapters — you write a `Scaffold` subclass by hand.
+- **secret-sweep** scans the working tree only — no git history, so it will not
+  find a secret that was committed and later deleted. It does not verify
+  credentials against provider APIs, so it cannot distinguish a live key from a
+  rotated one. Its 23 residual false positives on CPython are CamelCase Win32
+  bindings and zipfile struct constants; entropy findings need human review, and
+  the recall corpus is generated rather than harvested, so 99.5% honestly means
+  "99.5% of the shapes I modelled". Use gitleaks or trufflehog for history and
+  verification.
 - Several older repositories here are stale experiments. They are kept for
   history, not as current work.
 
