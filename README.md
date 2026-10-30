@@ -22,6 +22,23 @@ That is the problem I work on. The pattern I keep coming back to:
 
 #### What I'm building
 
+**[quillback](https://github.com/saadcyber21/quillback)** —
+offline red-team harness for AI agent scaffolds
+[![CI](https://github.com/saadcyber21/quillback/actions/workflows/ci.yml/badge.svg)](https://github.com/saadcyber21/quillback/actions)
+
+No API keys, no tokens, deterministic — so it can gate a pull request. Every
+tool in this space (garak, PyRIT, promptfoo, deepteam) attacks a *live model*;
+quillback attacks the **scaffold** you actually own: system prompt, tool schemas,
+permission gates, memory store, inter-agent messaging. Those artefacts are
+static, so no inference is needed and the same input always gives the same
+findings.
+
+18 attacks across OWASP ASI01/02/03/04/06/07, SARIF export, zero runtime
+dependencies. On the bundled deliberately-vulnerable reference agent it reports
+**19 findings**; on the hardened variant, **0**. CI asserts both directions on
+every commit, because an attack that cannot be shown to stop detecting is not a
+detector. It scans itself: those 19 findings are live in the repo's Security tab.
+
 **[LogAgent-SOC](https://github.com/saadcyber21/ai-soc-detection-engine)** —
 autonomous threat hunting with explainable-AI forensics
 ![CI](https://github.com/saadcyber21/ai-soc-detection-engine/actions/workflows/ci-cd.yml/badge.svg)
@@ -59,17 +76,6 @@ maps AI system controls to NIST AI RMF
 
 ---
 
-#### In progress
-
-**quillback** — offline red-team harness for AI agent scaffolds. 18 deterministic
-attacks mapped to the OWASP Top 10 for Agentic Applications (ASI 2026), SARIF
-export for GitHub code scanning, zero runtime dependencies, no API keys. On the
-bundled deliberately-vulnerable reference agent it reports 19 findings; on the
-hardened variant, 0. That contrast is the point — it is what separates a scanner
-from a noise generator.
-
----
-
 #### Honest limitations
 
 I would rather state these than have you find them.
@@ -77,9 +83,10 @@ I would rather state these than have you find them.
 - **LogAgent-SOC** needs Ollama or vLLM for real model inference. CI exercises
   the deterministic heuristic backend, so a green build proves the pipeline,
   parser, grounding and benchmark gate — not model quality on your data.
-- **quillback** covers 6 of the 10 ASI categories. ASI05, ASI08, ASI09 and
-  ASI10 have no attacks yet, and its report says so explicitly rather than
-  implying full coverage.
+- **quillback** is v0.1.0 and covers 6 of the 10 ASI categories. ASI05, ASI08,
+  ASI09 and ASI10 have no attacks yet. Its report lists those as blind spots on
+  every run rather than implying full coverage, and it has no framework
+  adapters — you write a `Scaffold` subclass by hand.
 - Several older repositories here are stale experiments. They are kept for
   history, not as current work.
 
