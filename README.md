@@ -43,16 +43,16 @@ against role policy and inspects payloads for destructive operations —
 
 **[secret-sweep](https://github.com/saadcyber21/secret-sweep)** — credential and
 secret detection across repositories
-![CI](https://github.com/saadcyber21/secret-sweep/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/saadcyber21/secret-sweep/actions/workflows/validate.yml/badge.svg)
 
 **[Phish-Guard](https://github.com/saadcyber21/Phish-Guard)** — phishing detection
-![CI](https://github.com/saadcyber21/Phish-Guard/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/saadcyber21/Phish-Guard/actions/workflows/validate.yml/badge.svg)
 
 **[plan-guard](https://github.com/saadcyber21/plan-guard)** — guardrails for agent execution plans
-![CI](https://github.com/saadcyber21/plan-guard/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/saadcyber21/plan-guard/actions/workflows/validate.yml/badge.svg)
 
 **[kql-genie](https://github.com/saadcyber21/kql-genie)** — natural language to KQL for threat hunting
-![CI](https://github.com/saadcyber21/kql-genie/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/saadcyber21/kql-genie/actions/workflows/validate.yml/badge.svg)
 
 **[nist-ai-compliance-mapper](https://github.com/saadcyber21/nist-ai-compliance-mapper)** —
 maps AI system controls to NIST AI RMF
